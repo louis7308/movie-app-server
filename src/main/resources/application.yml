@@ -1,12 +1,10 @@
 spring:
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3307/movie
+    driver-class-name: ${DB_DRIVER}
+    url: ${DB_URL}
     username: root
-    password: sua7308!?
+    password: ${DB_PASSWORD}
   jpa:
-    database: mysql   # ?? ?? ??
-    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect # ?? ?? ??
     hibernate:
       ddl-auto: update
     show-sql: true
