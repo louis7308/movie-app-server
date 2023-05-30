@@ -12,6 +12,7 @@ class WebMvcConfig : WebMvcConfigurer {
             .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
             .allowedOrigins(
                 "http://localhost:3000",
+                "https://gsm-movie.netlify.app"
             )
             .allowCredentials(true)
             .allowedHeaders("Authorization", "Content-Type", "Refresh-Token")
