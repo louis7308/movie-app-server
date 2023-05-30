@@ -13,6 +13,7 @@ import com.example.movie.domain.movie.repository.MovieRepository
 import com.example.movie.domain.movie.service.MovieService
 import com.example.movie.domain.user.repository.UserRepository
 import com.example.movie.domain.movie.util.MovieConverter
+import org.springframework.data.domain.Sort
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import java.util.*
@@ -26,7 +27,7 @@ class MovieServiceImpl(
     private val movieConverter: MovieConverter
 ) : MovieService {
     override fun findAll(): List<FindAllMovieListDto> =
-        movieRepository.findAll()
+        movieRepository.findAll(Sort.by("likes").descending())
             .map { movieConverter.toDto(it) }
 
     override fun findMovie(id: Long): FindMovieDetailDto =
