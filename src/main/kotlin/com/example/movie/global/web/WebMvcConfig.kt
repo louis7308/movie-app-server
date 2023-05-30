@@ -15,7 +15,6 @@ class WebMvcConfig : WebMvcConfigurer {
                 "https://gsm-movie.netlify.app"
             )
             .allowCredentials(true)
-            .allowedHeaders("Authorization", "Content-Type", "Refresh-Token")
-            .exposedHeaders(HttpHeaders.CONTENT_DISPOSITION)
+            .allowedHeaders("*")
     }
 }
