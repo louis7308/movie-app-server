@@ -6,6 +6,7 @@ import com.example.movie.domain.movie.presentation.data.dto.FindAllMovieListDto
 import com.example.movie.domain.movie.presentation.data.dto.FindLikeMyMovieDto
 import com.example.movie.domain.movie.presentation.data.dto.FindMovieDetailDto
 import com.example.movie.domain.movie.presentation.data.request.CreateMovieRequest
+import com.example.movie.domain.movie.presentation.data.request.UserIdRequest
 import com.example.movie.domain.movie.presentation.data.response.AddLikeResponse
 import com.example.movie.domain.movie.repository.LikeRepository
 import com.example.movie.domain.movie.repository.MovieRepository
@@ -14,8 +15,8 @@ import com.example.movie.domain.user.repository.UserRepository
 import com.example.movie.domain.movie.util.MovieConverter
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
-import java.lang.RuntimeException
 import java.util.*
+import kotlin.RuntimeException
 
 @Service
 class MovieServiceImpl(
@@ -32,11 +33,18 @@ class MovieServiceImpl(
         movieRepository.findByIdOrNull(id)
             .let { movieConverter.toDto(it) }
 
-    override fun addLike(movieId: Long, userId: String): AddLikeResponse {
-        val user = userRepository.findByUuid(UUID.fromString(userId)) ?: throw RuntimeException("유저가 존재하지 않습니다.")
-        val movie = movieRepository.findByIdOrNull(movieId) ?: throw RuntimeException("영화가 존재하지 않습니다.")
-        likeRepository.save(Likes(0, movie, user))
-        return AddLikeResponse(likeRepository.findByMovie(movie).count())
+    override fun addLike(userIdRequest: UserIdRequest): AddLikeResponse {
+        val user = userRepository.findByUuid(UUID.fromString(userIdRequest.userId)) ?: throw RuntimeException("유저가 존재하지 않습니다.")
+        val movie = movieRepository.findByIdOrNull(userIdRequest.movieId) ?: throw RuntimeException("영화가 존재하지 않습니다.")
+        return if(userIdRequest.isChecked) {
+            likeRepository.save(Likes(0, movie, user))
+            AddLikeResponse(likeRepository.findByMovie(movie).count())
+        } else {
+            val movieAndUser = likeRepository.findByMovieAndUser(movie, user) ?: throw RuntimeException("유저가 좋아요 누른 영화가 존재하지 않습니다.")
+            likeRepository.delete(movieAndUser)
+            AddLikeResponse(likeRepository.findByMovie(movie).count())
+        }
+
     }
 
     override fun findMyMovieFromLike(uuid: String): List<FindLikeMyMovieDto> {

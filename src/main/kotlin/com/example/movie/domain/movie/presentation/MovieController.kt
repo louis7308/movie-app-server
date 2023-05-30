@@ -25,7 +25,7 @@ class MovieController(
 
     @PostMapping("/likes")
     fun addMovieLike(@RequestBody userIdRequest: UserIdRequest): AddLikeResponse =
-        movieService.addLike(userIdRequest.movieId, userIdRequest.userId)
+        movieService.addLike(userIdRequest)
 
     @GetMapping("/likes/{uuid}")
     fun getMyMovieFromLike(@PathVariable("uuid") uuid: String): List<FindLikeMyMovieResponse> =

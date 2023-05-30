@@ -9,5 +9,7 @@ import java.util.UUID
 interface LikeRepository : JpaRepository<Likes, Long> {
     fun findByMovie(movieId: Movie): List<Likes>
 
+    fun findByMovieAndUser(movieId: Movie, user: User): Likes?
+
     fun findByUser(user: User?): List<Likes>
 }
