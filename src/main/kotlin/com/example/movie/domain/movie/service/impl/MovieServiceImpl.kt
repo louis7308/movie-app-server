@@ -27,7 +27,7 @@ class MovieServiceImpl(
     private val movieConverter: MovieConverter
 ) : MovieService {
     override fun findAll(): List<FindAllMovieListDto> =
-        movieRepository.findAll(Sort.by("likes").descending())
+        movieRepository.findAll(Sort.by("likes").descending()).distinct()
             .map { movieConverter.toDto(it) }
 
     override fun findMovie(id: Long): FindMovieDetailDto =
